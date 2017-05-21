@@ -1,15 +1,17 @@
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.template import loader
+
 from .models import Expenses
 
 
 def index(request):
-
     all_expenses = Expenses.objects.all()
-    html = ''
-    for expense in all_expenses:
-        url = '/dashboard/{expense_id}/'.format(expense_id=expense.id)
-        html += '<a href="{url}">{expense_name}</a></br>'.format(url=url, expense_name=expense.expense_name)
-    return HttpResponse(html)
+    template = loader.get_template('dashboard/dashboard.html')
+    context = {
+        'all_expenses': all_expenses,
+    }
+    return render(request, 'dashboard/dashboard.html', context)
 
 
 def detail(request, expense_id):
